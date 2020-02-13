@@ -1,109 +1,128 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TravelSmart</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!--Font awesome V5-->
-    <script src="https://kit.fontawesome.com/363416430c.js" crossorigin="anonymous"></script>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-      <!--Local CSS-->
-  <link rel="stylesheet" href="assets/styles/style.css">
-    <!--header-->
-    <div id="Header">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#"> 
-            <i class="fas fa-globe-americas">
-            <img src="" width="30" height="30" class="d-inline-block align-top" alt="">Travel Smart
-             </i>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarText">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Credit</a>
-                </li>
-              </ul>
-              <span class="navbar-text">
-                Commute Made Easier!
-              </span>
-            </div>
-          </nav>
-    </div>
 
-<!--documentaion-->
-  <div id="inputForm">
-    <form>
-      <div class="form-group row">
-        <button type="button" class="btn btn-lg btn btn-danger" disabled><i class="fas fa-route"></i>To</button>
-        <label class="col-sm-2 col-form-label"></label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control"
-            id="toDestination" placeholder="please Enter Location">
-          </div>
-       </div>
-      <div class="form-group row">
-        <button type="button" class="btn btn-lg btn btn-success" disabled><i class="fas fa-route"></i>From</button>
-        <label class="col-sm-2 col-form-label"></label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="fromDestination" placeholder="Current Location">
-          </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-2">
-          <button type="button" class="btn btn-lg btn-light" disabled><i class="far fa-bell"></i></i>Text Reminder</button>
-          
-        </div>
-          <div class="col-sm-10">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="textInput">
-              <label class="form-check-label" for="gridCheck1">Yes
-              </label>
-              <input class="form-check-input" type="checkbox" id="textInput">
-              <label class="form-check-label" for="gridCheck1">No
-              </label>
-              </div>
-          </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-10">
-          <button type="submit" class="btn btn-info">Route</button>
-        </div>
-      </div>
-    </form> 
-  </div>
 
-  <!--Liam code starts here-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
 
-  <!--Liam code ends here-->
+</head>
 
-  <!--Kryshtene code starts here-->
+<body>
 
-  <!--Kryshtene code ends here-->
+    <table cellpadding="0" cellspacing="3">
+        <tr>
+            <td colspan="2">
+                Source:
+                <input type="text" id="txtSource" style="width: 200px" />
+                &nbsp; Destination:
+                <input type="text" id="txtDestination" style="width: 200px" />
+                <br />
+                </br>
+                <input type="button" value="Get Route" onclick="GetRoute()" />
+                <input type="button" value="Text Me" id="button1">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="dvDistance">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="dvMap" style="width: 500px; height: 500px">
+                </div>
+            </td>
+            <td>
+                <div id="dvPanel" style="width: 500px; height: 500px">
+                </div>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript"
+        src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBZpPOvEO-_AuX8vf2XKpcgNmTFeXs0O8s&libraries=places&callback=initMap"></script>
+    <script type="text/javascript">
+        var travelTime = 0;
+        var rawTime = 0;
+        var source, destination;
+        var directionsDisplay;
+        var directionsService = new google.maps.DirectionsService();
+        google.maps.event.addDomListener(window, 'load', function () {
+            new google.maps.places.SearchBox(document.getElementById('txtSource'));
+            new google.maps.places.SearchBox(document.getElementById('txtDestination'));
+            directionsDisplay = new google.maps.DirectionsRenderer({ 'draggable': true });
+        });
+        function GetRoute() {
+            var miami = new google.maps.LatLng(25.761681, -80.191788);
+            var mapOptions = {
+                zoom: 7,
+                center: miami
+            };
+            map = new google.maps.Map(document.getElementById('dvMap'), mapOptions);
+            directionsDisplay.setMap(map);
+            directionsDisplay.setPanel(document.getElementById('dvPanel'));
+            //*********DIRECTIONS AND ROUTE**********************//
+            source = document.getElementById("txtSource").value;
+            destination = document.getElementById("txtDestination").value;
 
-  <!--Gianni code starts here-->
+            const request = {
+                origin: source,
+                destination: destination,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            directionsService.route(request, function (response, status) {
+                if (status !== google.maps.DirectionsStatus.OK) {
+                    console.log("an error has occured")
 
-  <!--Gianni code ends here-->
+                } else {
+                    directionsDisplay.setDirections(response);
+                    var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+                }
+            });
+            //*********DISTANCE AND DURATION**********************//
+            var service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix({
+                origins: [source],
+                destinations: [destination],
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.IMPERIAL,
+                avoidHighways: false,
+                avoidTolls: false
+            }, function (response, status) {
+                if (status == google.maps.DistanceMatrixStatus.OK && response.rows[0].elements[0].status != "ZERO_RESULTS") {
+                    var distance = response.rows[0].elements[0].distance.text;
+                    var duration = response.rows[0].elements[0].duration.text;
+                    var duration1 = response.rows[0].elements[0].duration.value;
+                    var dvDistance = document.getElementById("dvDistance");
+                    dvDistance.innerHTML = "";
+                    dvDistance.innerHTML += "Distance: " + distance + "<br />";
+                    dvDistance.innerHTML += "Duration: " + duration;
+                    travelTime = duration
+                    rawTime = duration1
 
-    <!--End-->
-    <footer>
-    <div class="container">
-      <span class="text-muted">CopyRight</span>
-    </div>
-  </footer>
-    
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-      <!--local Javascript-->
-    <script src="assets/scripts/main.js"></script>
-  </body>
+
+                } else {
+                    alert("Unable to find the distance via road.");
+                }
+                return travelTime
+                return rawTime
+            });
+        }
+        $('#button1').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/sendText/' + travelTime + "/" + rawTime
+            });
+            console.log("button has been clicked")
+            console.log(travelTime)
+        });
+    </script>
+</body>
 </html>
